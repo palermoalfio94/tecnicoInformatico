@@ -1,0 +1,86 @@
+OPERAZIONE PC — LA SFIDA DEL LABORATORIO
+Gioco didattico per la prima superiore
+
+AVVIO
+Aprire index.html con Google Chrome o Microsoft Edge (doppio clic oppure
+tasto destro > Apri con). Non occorrono installazioni, server o connessione.
+Per distribuire il gioco basta copiare il solo index.html sui PC degli studenti.
+HTML, CSS, JavaScript, illustrazioni e suoni sono tutti incorporati nel file.
+
+COME GIOCARE
+Inserire un nickname di fantasia. La prima missione diventa disponibile;
+le successive si sbloccano completando la precedente.
+1. Selezionare un nome e cliccare l'illustrazione corrispondente.
+2. Trascinare ciascun dispositivo nella categoria corretta, oppure usare i
+   pulsanti. Dopo il feedback premere “Ho letto, prossimo dispositivo”.
+3. Selezionare titolo, testo o immagine; trascinare o usare cursori e frecce.
+   Colore, dimensione e allineamento si modificano con gli appositi controlli.
+   Il modello e le misure sono visibili. Verificare e migliorare liberamente.
+   È possibile confermare anche un risultato parziale, dopo la verifica.
+4. Scrivere le risposte agli enigmi, leggere gli indizi e inserire nel tastierino
+   le cinque cifre rivelate nell'ordine. Sono validi anche i tasti numerici del PC.
+
+SALVATAGGIO
+I progressi vengono salvati automaticamente nel localStorage del browser.
+“Salva e torna alla base” consente di cambiare schermata e riprendere.
+Il salvataggio dipende dallo stesso browser, profilo e percorso del file:
+spostando il file o usando un altro browser si può iniziare una nuova partita.
+Se il browser blocca il salvataggio, un avviso compare in fondo alla pagina.
+Il tempo misura l'attività mentre la scheda è visibile; si ferma alla conclusione.
+“Ricomincia” azzera la partita dopo una conferma. Sui PC condivisi usarlo
+prima che inizi un altro studente. Non vengono trasmessi dati su Internet.
+
+PUNTEGGI
+Missione 1: 10 componenti, massimo 20. Risposta corretta al primo tentativo:
+2 punti; dopo un errore: 1; dopo due errori: 0,5. Il terzo errore rivela la
+soluzione, vale 0 e consente comunque di proseguire.
+Missione 2: 15 dispositivi, massimo 20. Nell'ordine casuale della partita,
+i primi dieci valgono 1 punto e gli ultimi cinque 2 punti. Dopo un errore il
+dispositivo vale metà. Tentativi illimitati, nessun doppio conteggio.
+Missione 3: 10 controlli da 2,5 punti, massimo 25. La verifica non limita i
+tentativi; una modifica richiede una nuova verifica. Confermando la missione,
+il punteggio diventa definitivo.
+Missione 4: 5 enigmi da 3 punti, massimo 15. Ogni errore riduce di 1 punto
+il valore dell'enigma fino al minimo di 1. Gli indizi non costano punti.
+Gli errori nel tastierino non tolgono punti.
+Totale massimo: 80. Sono previsti anche risultati con mezzi punti.
+Titoli: meno di 40 Apprendista digitale; da 40 Tecnico informatico;
+da 60 Esperto del laboratorio; da 75 Leggenda dell'informatica.
+
+ATTESTATO
+Alla fine sono disponibili “Stampa attestato / Salva PDF” e “Scarica
+attestato HTML”. Per il PDF scegliere “Salva come PDF” nella stampa.
+L'attestato HTML si apre e si stampa anche offline. Non ha valore ufficiale.
+
+PROPOSTA DI LEZIONE: CIRCA 50–55 MINUTI
+Le durate indicate nel gioco sono orientative e non impongono attese.
+Una partita individuale veloce può essere completata in meno tempo.
+Per una lezione completa, proporre lavoro a coppie, con ruoli alternati:
+- 3 minuti: avvio, nickname e spiegazione dell'obiettivo.
+- 10 minuti: missione 1; prima di rispondere descrivere funzione e forma
+  di ogni componente. Dire se è una parte fisica o un programma.
+- 10 minuti: missione 2; motivare a voce il verso dei dati e leggere tutte
+  le spiegazioni. Confrontare cuffie semplici e cuffie con microfono.
+- 17 minuti: missione 3; alternare i ruoli dopo titolo, testo e immagine.
+  Discutere leggibilità, contrasto, proporzioni e allineamento prima dei cursori.
+- 10 minuti: missione 4; ragionare sugli indizi, annotare il codice e confrontare
+  gli usi di Google Documenti e Google Presentazioni.
+- 5 minuti: attestato e confronto finale su un errore che ha aiutato a imparare.
+
+NOTE DIDATTICHE
+La tavoletta grafica è un modello senza schermo; le cuffie semplici sono
+senza microfono. La stampante con scanner effettua entrambe le operazioni.
+Il display Braille rappresentato restituisce informazioni al tatto: output.
+Il case è il contenitore dei componenti interni e non compare nella
+classificazione input/output come se fosse una periferica unica.
+L'editor è una simulazione didattica: non accede a Google o ai documenti reali.
+Gli enigmi riguardano stampante, software, tastiera, Presentazioni e Documenti.
+
+VERIFICHE ESEGUITE
+Percorso completo fino a 80/80, sblocco progressivo, errori e recupero,
+salvataggio/ripristino, nickname con caratteri speciali e valutazione del modello.
+Prova nel browser: quattro missioni fino alla conclusione, trascinamento reale
+dei dispositivi, spostamento diretto nella diapositiva, cursori, colore e download
+dell'attestato. Controllo delle schermate su larghezze desktop e mobile.
+Il file verifica.cjs è soltanto uno strumento di controllo per lo sviluppatore:
+richiede Node.js e jsdom, e NON serve per eseguire o distribuire il gioco.
