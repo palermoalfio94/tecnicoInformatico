@@ -4,6 +4,8 @@ Gioco didattico in italiano per studenti di prima superiore, realizzato con HTML
 
 **[Gioca nel browser](https://palermoalfio94.github.io/tecnicoInformatico/)**
 
+È disponibile anche **[MEMORY LAB — Il laboratorio delle memorie](https://palermoalfio94.github.io/tecnicoInformatico/memory-lab/)**: sei postazioni interattive su RAM, ROM, cache, HDD, SSD e unità di misura, con quaderno stampabile e diploma finale. [Istruzioni Memory Lab](memory-lab/README.md).
+
 ## Le quattro missioni
 
 1. **Il computer smontato**: riconoscere dieci componenti della postazione.

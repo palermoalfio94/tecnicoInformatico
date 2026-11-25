@@ -1,0 +1,54 @@
+<!doctype html>
+<html lang="it">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <meta name="theme-color" content="#101c2c" />
+    <meta
+      name="description"
+      content="Un laboratorio interattivo per scoprire le memorie del computer. Sei esperimenti, un quaderno e una missione da tecnico."
+    />
+    <title>MEMORY LAB — Il laboratorio delle memorie</title>
+    <link rel="stylesheet" href="style.css" />
+    <script defer src="content.js"></script>
+    <script defer src="app.js"></script>
+  </head>
+  <body>
+    <header>
+      <button
+        class="logo"
+        id="home"
+        aria-label="Memory Lab, torna al laboratorio"
+      >
+        <span class="logo-chip">M<span>▦</span></span
+        ><span
+          >MEMORY <b>LAB</b><small>IL LABORATORIO DELLE MEMORIE</small></span
+        >
+      </button>
+      <nav aria-label="Strumenti">
+        <span id="student"></span
+        ><button id="notebook">
+          Quaderno del Tecnico <span id="noteCount">0/6</span></button
+        ><button id="motion" aria-pressed="false">Animazioni: ON</button
+        ><button id="reset" class="quiet">Ricomincia da zero</button>
+      </nav>
+    </header>
+    <div class="global-progress"><div id="progressBar"></div></div>
+    <main id="app"></main>
+    <aside id="byte" aria-label="BYTE, assistente del laboratorio"></aside>
+    <div id="announcer" class="sr-only" aria-live="polite"></div>
+    <div id="toast" role="status" hidden></div>
+    <dialog id="dialog">
+      <h2 id="dialogTitle"></h2>
+      <div id="dialogBody"></div>
+      <div id="dialogActions"></div>
+    </dialog>
+    <section id="printArea"></section>
+    <footer>
+      <span>MEMORY LAB · Impara, sperimenta, dimostra.</span
+      ><span id="saveState"
+        >Offline · salvataggio automatico sul dispositivo</span
+      >
+    </footer>
+  </body>
+</html>
