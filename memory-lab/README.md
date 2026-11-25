@@ -35,7 +35,7 @@ Le verifiche interrotte si possono riprendere tornando nella postazione e scegli
 | SSD | Confronta due caricamenti | Osservare la gara e scegliere l'unità per quattro esigenze |
 | Unità | Riempi una chiavetta da 8 GB | Tre tipi di file, capacità superata e piccoli esercizi sulle misure |
 
-Il modello RAM non riserva spazio al sistema operativo, per concentrare l'attenzione sul consumo delle applicazioni. Il caricamento HDD/SSD usa **6 e 2 secondi illustrativi**, non benchmark. Dimensioni dei file, capacità degli archivi ed esempi sono didattici. La cache usa tre posti e una regola FIFO dichiarata, senza simulare tutta la complessità di una CPU reale.
+Il modello RAM non riserva spazio al sistema operativo, per concentrare l'attenzione sul consumo delle applicazioni. Il caricamento HDD/SSD usa **6 e 2 secondi illustrativi**, non misure effettuate su computer reali. Dimensioni dei file, capacità degli archivi ed esempi sono didattici. La cache usa tre posti e una regola FIFO dichiarata, senza simulare tutta la complessità di una CPU reale.
 
 ## Quaderno e diploma in PDF
 
@@ -53,7 +53,7 @@ Un messaggio in fondo alla pagina segnala se il browser impedisce il salvataggio
 
 Sui PC condivisi usare **Ricomincia da zero** prima del prossimo studente. È richiesta conferma e viene cancellata soltanto la partita di Memory Lab. Operazione PC non viene modificato.
 
-Il pulsante **Animazioni** riduce i movimenti; viene rispettata anche la preferenza di sistema per le animazioni ridotte. BYTE si può ridurre e riaprire. Non ci sono suoni automatici. Le azioni sono utilizzabili tramite clic e tastiera; le tessere dell'avvio hanno anche il trascinamento. Feedback con testo e simboli affiancano i colori.
+Il pulsante **Animazioni** riduce i movimenti; viene rispettata anche la preferenza di sistema per le animazioni ridotte. BYTE occupa uno spazio separato dai comandi, così non copre i pulsanti. Su schermi piccoli la spiegazione si apre dal pulsante «BYTE · Aiuto». Le risposte MB/TB alla domanda sulla fotografia mostrano subito una spiegazione vicina e conservano la scelta. Non ci sono suoni automatici. Le azioni sono utilizzabili tramite clic e tastiera; le tessere dell'avvio hanno anche il trascinamento. Feedback con testo e simboli affiancano i colori.
 
 ## Proposta di lezione: circa 60 minuti
 

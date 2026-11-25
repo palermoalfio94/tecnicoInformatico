@@ -109,7 +109,7 @@ const CONTENT = [
           "Vuoi più spazio sul disco",
         ],
         0,
-        "Può aiutare il lavoro simultaneo se la RAM è il collo di bottiglia.",
+        "Può aiutare il lavoro simultaneo se la RAM è la causa del rallentamento.",
       ),
       number(
         "Su 8 GB, un videogioco occupa 4 GB e un editor 3 GB. Quanto resta?",
@@ -140,7 +140,7 @@ const CONTENT = [
     slides: [
       [
         "Istruzioni prima del sistema",
-        "All’accensione viene eseguito il firmware: un software di base che inizializza i componenti e avvia il processo che porta al sistema operativo.",
+        "All’accensione viene eseguito il firmware: un software di base che prepara i componenti e avvia il processo che porta al sistema operativo.",
         "Prima di vedere il desktop, il computer deve sapere come iniziare.",
       ],
       [
@@ -163,7 +163,7 @@ const CONTENT = [
       definition:
         "La ROM tradizionale è una memoria non volatile a sola lettura. Nei PC moderni il firmware UEFI risiede generalmente in flash aggiornabile.",
       features: [
-        "Il firmware è software di base per inizializzare l’avvio.",
+        "Il firmware è software di base per preparare l’avvio.",
         "Le istruzioni restano disponibili senza alimentazione.",
         "RAM e memoria del firmware hanno compiti differenti.",
       ],
@@ -248,7 +248,7 @@ const CONTENT = [
     color: "#ffd071",
     label: "Corsia del processore",
     intro:
-      "La CPU elabora istruzioni e dati. Per ridurre alcune attese, usa una cache molto veloce e piccola, vicina al processore. È come tenere sulla scrivania i fogli che consulti spesso. Richiedi più volte gli stessi dati e osserva quando il processore li trova già a portata di mano.",
+      "Il processore (CPU) esegue istruzioni e lavora sui dati. Per ridurre alcune attese, usa una cache molto veloce e piccola, vicina al processore. È come tenere sulla scrivania i fogli che consulti spesso. Richiedi più volte gli stessi dati e osserva quando il processore li trova già a portata di mano.",
     slides: [
       [
         "Vicino al processore",
@@ -256,19 +256,19 @@ const CONTENT = [
         "Una piccola zona della scrivania subito accanto a te evita di raggiungere ogni volta lo scaffale.",
       ],
       [
-        "Hit: l’ho già qui",
-        "Si ha un cache hit quando il dato richiesto è già nella cache. Il processore può recuperarlo rapidamente, senza accedere alla RAM per quel dato nel nostro modello.",
+        "Dato già pronto (hit)",
+        "Si parla di dato trovato, o «hit», quando il dato richiesto è già nella cache. Il processore può recuperarlo rapidamente, senza accedere alla RAM per quel dato nel nostro modello.",
         "Richiedi A, poi ancora A: la seconda richiesta può essere un hit.",
       ],
       [
-        "Miss: devo cercare",
-        "Si ha un cache miss quando il dato non è presente. Nel nostro modello viene letto dalla RAM e una copia entra nella cache. La realtà ha più livelli e regole.",
+        "Dato da cercare (miss)",
+        "Si parla di dato da cercare, o «miss», quando il dato non è presente. Nel nostro modello viene letto dalla RAM e una copia entra nella cache. La realtà ha più livelli e regole.",
         "Tre posti non possono contenere tutti i dati: qualche copia deve essere sostituita.",
       ],
       [
         "Piccola, veloce e volatile",
-        "La cache della CPU è volatile e non sostituisce la RAM o il disco. Nel laboratorio usiamo tre posti e la regola FIFO: esce il dato inserito da più tempo.",
-        "Un hit non cambia l’ordine FIFO. I tempi mostrati sono simbolici, non misure di un processore reale.",
+        "La cache della CPU è volatile e non sostituisce la RAM o il disco. Nel laboratorio usiamo tre posti e la regola «prima entra, prima esce» (FIFO): viene sostituito il dato inserito da più tempo.",
+        "Leggere un dato già presente non cambia l’ordine di sostituzione. I tempi mostrati sono simbolici, non misure di un processore reale.",
       ],
     ],
     note: {
@@ -277,7 +277,7 @@ const CONTENT = [
       features: [
         "Volatile e molto più piccola della RAM.",
         "Hit: il dato è presente; miss: serve cercarlo altrove.",
-        "Nel modello: 3 posti e sostituzione FIFO.",
+        "Nel modello ci sono 3 posti: quando sono pieni, esce il dato inserito da più tempo.",
       ],
       example:
         "Richiedere due volte A permette di osservare un miss seguito da un hit.",
@@ -319,10 +319,10 @@ const CONTENT = [
         "La prima A e la prima B sono miss; le rispettive seconde richieste sono hit.",
       ),
       choice(
-        "In una cache FIFO [A, B, C], entra D. Quale dato esce?",
+        "Nella cache ci sono A, B, C in ordine di arrivo. Se esce il dato entrato per primo e arriva D, quale dato viene tolto?",
         ["A", "C", "D"],
         0,
-        "FIFO significa che esce il primo dato entrato: A.",
+        "Esce il dato che era entrato per primo: A. Questa regola si chiama anche FIFO.",
       ),
       tf(
         "Un miss significa necessariamente che il computer è guasto.",
@@ -470,13 +470,13 @@ const CONTENT = [
       ],
       [
         "Un confronto corretto",
-        "Le prestazioni dipendono da modello, collegamento, carico e altri componenti. La nostra gara usa tempi inventati: HDD 6 secondi, SSD 2 secondi. Non è un benchmark.",
+        "Le prestazioni dipendono da modello, collegamento, carico e altri componenti. La nostra gara usa tempi inventati: HDD 6 secondi, SSD 2 secondi. Non è una prova di velocità su un computer reale.",
         "Non tutti gli SSD sono uguali e un SSD non rende automaticamente più veloce ogni operazione della CPU.",
       ],
       [
         "Scegli in base allo scopo",
         "Per grandi archivi con budget limitato, un HDD può essere conveniente. Per caricamenti rapidi e un portatile trasportato spesso, un SSD offre vantaggi.",
-        "L’assenza di parti mobili migliora la resistenza agli urti rispetto a un HDD; nessuna unità è indistruttibile. Servono comunque backup.",
+        "L’assenza di parti mobili migliora la resistenza agli urti rispetto a un HDD; nessuna unità è indistruttibile. Servono comunque copie di sicurezza.",
       ],
     ],
     note: {
@@ -485,7 +485,7 @@ const CONTENT = [
       features: [
         "Accessi generalmente più rapidi rispetto a un HDD.",
         "Spesso costo per GB maggiore, a seconda dei prodotti.",
-        "Adatto a caricamenti rapidi e portatili; richiede comunque backup.",
+        "Adatto a caricamenti rapidi e portatili; richiede comunque copie di sicurezza.",
       ],
       example:
         "Sostituire un vecchio HDD con un SSD può migliorare l’avvio e il caricamento dei programmi.",
@@ -535,7 +535,7 @@ const CONTENT = [
         "L’assenza di parti mobili è un vantaggio, ma non rende il dispositivo indistruttibile.",
       ),
       tf(
-        "I tempi della gara del laboratorio sono benchmark di modelli reali.",
+        "I tempi della gara del laboratorio sono stati misurati su computer reali.",
         false,
         "Sono tempi simbolici, scelti soltanto per rendere visibile la differenza.",
       ),

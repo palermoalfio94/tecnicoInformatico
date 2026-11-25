@@ -68,6 +68,7 @@ const defaults = () => ({
       kinds: [],
       overflow: false,
       conversions: [false, false, false],
+      photoAnswer: null,
     },
   },
   final: {
@@ -206,6 +207,9 @@ function loadState() {
           fresh.sims.hdd.power = v.power !== false;
         } else {
           fresh.sims.units.overflow = !!v.overflow;
+          fresh.sims.units.photoAnswer = ["yes", "no"].includes(v.photoAnswer)
+            ? v.photoAnswer
+            : null;
           fresh.sims.units.conversions =
             Array.isArray(v.conversions) && v.conversions.length === 3
               ? v.conversions.map(Boolean)
@@ -360,6 +364,11 @@ function dialog(title, html, buttons = [["Ho capito", () => {}]]) {
     );
   $("#dialog").showModal();
 }
+$("#byteHelp").onclick = () =>
+  dialog(
+    "BYTE · La tua guida",
+    `<div class="byte-dialog-robot">${robot()}</div><p>${esc(byteText)}</p>`,
+  );
 function go(next, idx = station, nextPhase = phase) {
   clearInterval(raceTimer);
   raceTimer = null;
@@ -634,7 +643,7 @@ function observation(i) {
     () =>
       `Ho ricostruito i quattro passi dell’avvio e confrontato firmware funzionante e danneggiato. Senza firmware valido, il modello non raggiunge il sistema operativo.`,
     () =>
-      `Ho fatto ${s.cache.requests} richieste: ${s.cache.hits} hit e ${s.cache.requests - s.cache.hits} miss. Ho osservato ${s.cache.evictions} sostituzioni FIFO con tre posti disponibili.`,
+      `Ho fatto ${s.cache.requests} richieste: ${s.cache.hits} dati già presenti e ${s.cache.requests - s.cache.hits} dati da cercare nella RAM. Ho osservato ${s.cache.evictions} sostituzioni: ogni volta è uscito il dato entrato da più tempo, con tre posti disponibili.`,
     () =>
       `Ho salvato tre tipi di file, recuperato ${s.hdd.reads} file e compiuto ${s.hdd.deletes} ${s.hdd.deletes === 1 ? "eliminazione" : "eliminazioni"}. Dopo lo spegnimento dell’unità, l’archivio ha conservato i file rimasti.`,
     () =>
@@ -827,7 +836,7 @@ function renderROM() {
 function renderCache() {
   const s = state.sims.cache;
   $("#simContent").innerHTML =
-    `<div class="exp-instructions"><b>Obiettivo:</b> fai almeno sei richieste, ottieni un hit e provoca una sostituzione. La cache ha tre posti. Regola <b>FIFO</b>: esce il dato inserito da più tempo; un hit non cambia l’ordine.</div><div class="experiment"><section class="sim-scene"><h3>CPU / CACHE / RAM</h3><div class="flow"><div class="flow-block">CPU</div><span class="flow-link">↔</span><div class="flow-block" style="border-color:var(--amber)">CACHE</div><span class="flow-link">↔</span><div class="flow-block">RAM</div></div><div class="cache-slots">${[0, 1, 2].map((_, i) => `<div class="cache-slot ${s.slots[i] ? "filled" : ""}">${s.slots[i] || "–"}</div>`).join("")}</div><p class="muted" style="font-size:14px;text-align:center">Più vecchio a sinistra · più recente a destra</p><div class="counter-row"><div><b>${s.requests}</b><span>RICHIESTE</span></div><div><b>${s.hits}</b><span>HIT</span></div><div><b>${s.requests - s.hits}</b><span>MISS</span></div></div></section><section class="panel"><h3>Quale dato serve alla CPU?</h3><div class="data-buttons">${["A", "B", "C", "D", "E"].map((d) => `<button data-request="${d}">${d}</button>`).join("")}</div><p class="muted" style="margin-top:17px">Tempo simbolico: hit = 1 unità; miss = 5 unità. Non sono tempi reali né un benchmark.</p>${goals(
+    `<div class="exp-instructions"><b>Obiettivo:</b> fai almeno sei richieste, trova un dato già presente e provoca una sostituzione. La cache ha tre posti. Regola <b>prima entra, prima esce</b>: esce il dato inserito da più tempo; una lettura di un dato già presente non cambia l’ordine.</div><div class="experiment"><section class="sim-scene"><h3>CPU / CACHE / RAM</h3><div class="flow"><div class="flow-block">CPU</div><span class="flow-link">↔</span><div class="flow-block" style="border-color:var(--amber)">CACHE</div><span class="flow-link">↔</span><div class="flow-block">RAM</div></div><div class="cache-slots">${[0, 1, 2].map((_, i) => `<div class="cache-slot ${s.slots[i] ? "filled" : ""}">${s.slots[i] || "–"}</div>`).join("")}</div><p class="muted" style="font-size:14px;text-align:center">Più vecchio a sinistra · più recente a destra</p><div class="counter-row"><div><b>${s.requests}</b><span>RICHIESTE</span></div><div><b>${s.hits}</b><span>DATI TROVATI</span></div><div><b>${s.requests - s.hits}</b><span>DATI DA CERCARE</span></div></div></section><section class="panel"><h3>Quale dato serve alla CPU?</h3><div class="data-buttons">${["A", "B", "C", "D", "E"].map((d) => `<button data-request="${d}">${d}</button>`).join("")}</div><p class="muted" style="margin-top:17px">Tempo simbolico: dato trovato (hit) = 1 unità; dato da cercare (miss) = 5 unità. Sono tempi di esempio, non misurati su un computer reale.</p>${goals(
       [
         ["Esegui almeno sei richieste", s.requests >= 6],
         ["Trova almeno una volta il dato in cache", s.hits >= 1],
@@ -842,7 +851,9 @@ function renderCache() {
         if (s.slots.includes(d)) {
           s.hits++;
           s.last =
-            "HIT: " + d + " è già nella cache. Recupero in 1 unità simbolica.";
+            "DATO TROVATO (hit): " +
+            d +
+            " è già nella cache. Recupero in 1 unità simbolica.";
           feedback(s.last, "good");
         } else {
           let evicted = "";
@@ -852,7 +863,7 @@ function renderCache() {
           }
           s.slots.push(d);
           s.last =
-            "MISS: " +
+            "DATO DA CERCARE (miss): " +
             d +
             " viene recuperato dalla RAM in 5 unità simboliche." +
             (evicted
@@ -984,7 +995,7 @@ function renderHDD() {
 function renderSSD() {
   const s = state.sims.ssd;
   $("#simContent").innerHTML =
-    `<div class="exp-instructions"><b>Obiettivo:</b> avvia un confronto e scegli l’unità adatta a tutte le quattro situazioni. Computer uguali, cambia soltanto l’archiviazione. <b>Tempi illustrativi, non benchmark reali.</b></div><div class="experiment"><section class="sim-scene"><h3>DUE COMPUTER / UN CARICAMENTO</h3><div class="race-lane"><h3>Computer con HDD <span>6 s illustrativi</span></h3><div class="meter"><span id="hddRace" style="width:${s.race ? "100" : "0"}%"></span></div><span id="hddRaceText">${s.race ? "✓ Caricamento completato" : "In attesa"}</span></div><div class="race-lane ssd"><h3>Computer con SSD <span>2 s illustrativi</span></h3><div class="meter"><span id="ssdRace" style="width:${s.race ? "100" : "0"}%"></span></div><span id="ssdRaceText">${s.race ? "✓ Caricamento completato" : "In attesa"}</span></div><button id="startRace" class="primary">${s.race ? "Ripeti il confronto" : "Avvia il caricamento"}</button><p class="muted" style="font-size:14px;margin-top:16px">L’SSD accede ai chip senza movimenti di testine. Le prestazioni reali variano con prodotto e carico.</p></section><section class="panel"><h3>Quale unità sceglieresti?</h3>${SCENARIOS.map((sc, i) => `<div class="scenario"><p>${sc.text}</p>${s.scenarios[i] ? `<span class="done-label">✓ ${sc.answer.toUpperCase()}: ${sc.why}</span>` : `<button data-scenario="${i}" data-device="hdd" class="small">HDD</button> <button data-scenario="${i}" data-device="ssd" class="small">SSD</button>`}</div>`).join("")}${goals(
+    `<div class="exp-instructions"><b>Obiettivo:</b> avvia un confronto e scegli l’unità adatta a tutte le quattro situazioni. Computer uguali, cambia soltanto l’archiviazione. <b>Tempi di esempio, non misurati su computer reali.</b></div><div class="experiment"><section class="sim-scene"><h3>DUE COMPUTER / UN CARICAMENTO</h3><div class="race-lane"><h3>Computer con HDD <span>6 s illustrativi</span></h3><div class="meter"><span id="hddRace" style="width:${s.race ? "100" : "0"}%"></span></div><span id="hddRaceText">${s.race ? "✓ Caricamento completato" : "In attesa"}</span></div><div class="race-lane ssd"><h3>Computer con SSD <span>2 s illustrativi</span></h3><div class="meter"><span id="ssdRace" style="width:${s.race ? "100" : "0"}%"></span></div><span id="ssdRaceText">${s.race ? "✓ Caricamento completato" : "In attesa"}</span></div><button id="startRace" class="primary">${s.race ? "Ripeti il confronto" : "Avvia il caricamento"}</button><p class="muted" style="font-size:14px;margin-top:16px">L’SSD accede ai chip senza movimenti di testine. Le prestazioni reali variano con prodotto e carico.</p></section><section class="panel"><h3>Quale unità sceglieresti?</h3>${SCENARIOS.map((sc, i) => `<div class="scenario"><p>${sc.text}</p>${s.scenarios[i] ? `<span class="done-label">✓ ${sc.answer.toUpperCase()}: ${sc.why}</span>` : `<button data-scenario="${i}" data-device="hdd" class="small">HDD</button> <button data-scenario="${i}" data-device="ssd" class="small">SSD</button>`}</div>`).join("")}${goals(
       [
         ["Osserva entrambi i caricamenti conclusi", s.race],
         ["Completa le quattro scelte ragionate", s.scenarios.every(Boolean)],
@@ -1043,11 +1054,16 @@ function startRaceTimer() {
   tick();
   if (s.started) raceTimer = setInterval(tick, 100);
 }
+function photoUnitExplanation(answer) {
+  return answer === "yes"
+    ? "✓ Corretto: una fotografia può occupare alcuni MB. La dimensione cambia con la qualità e il formato."
+    : "✕ Riprova: i TB indicano uno spazio molto grande, adatto a un intero archivio. Per una singola fotografia scegli MB.";
+}
 function renderUnits() {
   const s = state.sims.units,
     used = sumFiles(s.files);
   $("#simContent").innerHTML =
-    `<div class="exp-instructions"><b>Obiettivo:</b> inserisci almeno tre tipi di file, prova a superare la capacità e risolvi i tre piccoli esercizi. 8 GB = 8000 MB, usando multipli decimali. Tutte le dimensioni dei file sono esempi.</div><div class="experiment"><section class="sim-scene"><h3>CHIAVETTA USB / 8 GB</h3><div class="usb-visual">${(used / 1000).toLocaleString("it-IT")} / 8 GB</div><div class="meter"><span style="width:${used / 80}%"></span></div><div class="meter-caption"><span>${used} MB usati</span><span>${8000 - used} MB liberi</span></div><div class="actions">${FILES.map((f) => `<button class="small" data-usb-add="${f.id}">${f.icon} ${f.name}<br>${f.mb} MB</button>`).join("")}</div>${fileRows(s.files)}<p class="muted" style="font-size:13px">Puoi aggiungere più copie dello stesso tipo di file ed eliminarle singolarmente.</p></section><section class="panel"><h3>Traduci le quantità</h3><div class="calc-field"><label for="convert0">2 GB = quanti MB?</label><div class="calc-row"><input id="convert0" type="number" min="0" placeholder="MB" ${s.conversions[0] ? 'disabled value="2000"' : ""}><button data-conversion="0" ${s.conversions[0] ? "disabled" : ""}>${s.conversions[0] ? "✓" : "Verifica"}</button></div></div><div class="calc-field"><label for="convert1">24 bit = quanti byte?</label><div class="calc-row"><input id="convert1" type="number" min="0" placeholder="byte" ${s.conversions[1] ? 'disabled value="3"' : ""}><button data-conversion="1" ${s.conversions[1] ? "disabled" : ""}>${s.conversions[1] ? "✓" : "Verifica"}</button></div></div><div class="calc-field"><p style="font-size:14px">Quale unità è ragionevole per una fotografia digitale?</p><button data-photo-unit="yes" class="small">MB</button> <button data-photo-unit="no" class="small">TB</button></div><div class="calc-field"><p style="font-size:14px">Quale misura indica una capacità?</p><button data-capacity="yes" class="small" ${s.conversions[2] ? "disabled" : ""}>8 GB</button> <button data-capacity="no" class="small" ${s.conversions[2] ? "disabled" : ""}>100 MB/s</button>${s.conversions[2] ? "<span> ✓</span>" : ""}</div>${goals(
+    `<div class="exp-instructions"><b>Obiettivo:</b> inserisci almeno tre tipi di file, prova a superare la capacità e risolvi i tre piccoli esercizi. 8 GB = 8000 MB, usando multipli decimali. Tutte le dimensioni dei file sono esempi.</div><div class="experiment"><section class="sim-scene"><h3>CHIAVETTA USB / 8 GB</h3><div class="usb-visual">${(used / 1000).toLocaleString("it-IT")} / 8 GB</div><div class="meter"><span style="width:${used / 80}%"></span></div><div class="meter-caption"><span>${used} MB usati</span><span>${8000 - used} MB liberi</span></div><div class="actions">${FILES.map((f) => `<button class="small" data-usb-add="${f.id}">${f.icon} ${f.name}<br>${f.mb} MB</button>`).join("")}</div>${fileRows(s.files)}<p class="muted" style="font-size:13px">Puoi aggiungere più copie dello stesso tipo di file ed eliminarle singolarmente.</p></section><section class="panel"><h3>Traduci le quantità</h3><div class="calc-field"><label for="convert0">2 GB = quanti MB?</label><div class="calc-row"><input id="convert0" type="number" min="0" placeholder="MB" ${s.conversions[0] ? 'disabled value="2000"' : ""}><button data-conversion="0" ${s.conversions[0] ? "disabled" : ""}>${s.conversions[0] ? "✓" : "Verifica"}</button></div></div><div class="calc-field"><label for="convert1">24 bit = quanti byte?</label><div class="calc-row"><input id="convert1" type="number" min="0" placeholder="byte" ${s.conversions[1] ? 'disabled value="3"' : ""}><button data-conversion="1" ${s.conversions[1] ? "disabled" : ""}>${s.conversions[1] ? "✓" : "Verifica"}</button></div></div><div class="calc-field"><p style="font-size:14px">Quale unità è ragionevole per una fotografia digitale?</p><div class="photo-unit-answers" role="group" aria-label="Scegli l’unità per una fotografia"><button type="button" data-photo-unit="yes" aria-pressed="${s.photoAnswer === "yes"}">${s.photoAnswer === "yes" ? "✓ MB" : "MB"}</button> <button type="button" data-photo-unit="no" aria-pressed="${s.photoAnswer === "no"}">${s.photoAnswer === "no" ? "✕ TB" : "TB"}</button></div><p id="photoFeedback" class="inline-feedback ${s.photoAnswer === "yes" ? "good" : "bad"}" role="status" ${s.photoAnswer ? "" : "hidden"}>${s.photoAnswer ? photoUnitExplanation(s.photoAnswer) : ""}</p></div><div class="calc-field"><p style="font-size:14px">Quale misura indica una capacità?</p><button data-capacity="yes" class="small" ${s.conversions[2] ? "disabled" : ""}>8 GB</button> <button data-capacity="no" class="small" ${s.conversions[2] ? "disabled" : ""}>100 MB/s</button>${s.conversions[2] ? "<span> ✓</span>" : ""}</div>${goals(
       [
         ["Inserisci almeno tre tipi di file", s.kinds.length >= 3],
         ["Prova a superare 8000 MB", s.overflow],
@@ -1128,19 +1144,33 @@ function renderUnits() {
         rerenderExperiment();
       }),
   );
-  root.querySelectorAll("[data-photo-unit]").forEach(
-    (b) =>
-      (b.onclick = () => {
-        const correct = b.dataset.photoUnit === "yes";
-        feedback(
-          correct
-            ? "✓ Una foto può occupare alcuni MB: la dimensione varia con qualità e formato. I TB sono più adatti a descrivere grandi archivi."
-            : "TB indica una quantità molto grande: confronta una singola foto con un intero archivio. Riprova.",
-          correct ? "good" : "bad",
-        );
-        rerenderExperiment();
-      }),
-  );
+  root.querySelectorAll("[data-photo-unit]").forEach((button) => {
+    button.onclick = () => {
+      // Aggiorna soltanto la domanda: il risultato resta vicino ai pulsanti,
+      // lo scorrimento non cambia e le conversioni ancora da inviare restano intatte.
+      s.photoAnswer = button.dataset.photoUnit;
+      const correct = s.photoAnswer === "yes";
+      const explanation = photoUnitExplanation(s.photoAnswer);
+      const result = $("#photoFeedback");
+      result.hidden = false;
+      result.className = "inline-feedback " + (correct ? "good" : "bad");
+      result.textContent = explanation;
+      root.querySelectorAll("[data-photo-unit]").forEach((option) => {
+        const chosen = option.dataset.photoUnit === s.photoAnswer;
+        option.setAttribute("aria-pressed", String(chosen));
+        option.textContent =
+          option.dataset.photoUnit === "yes"
+            ? chosen
+              ? "✓ MB"
+              : "MB"
+            : chosen
+              ? "✕ TB"
+              : "TB";
+      });
+      $("#announcer").textContent = explanation;
+      save();
+    };
+  });
   root.querySelectorAll("[data-capacity]").forEach(
     (b) =>
       (b.onclick = () => {
@@ -1461,7 +1491,7 @@ function diploma() {
   $("#openFinalNotes").onclick = openNotebook;
   $("#labAgain").onclick = () => go("home");
   say(
-    "Complimenti: sei arrivato al diploma. Hai sperimentato il lavoro della RAM, l’avvio del firmware, gli hit della cache e l’archiviazione di HDD e SSD. Sai anche leggere le capacità e scegliere un intervento motivato. Il quaderno rimane tuo per ripassare: stampalo insieme al diploma o salvalo come PDF.",
+    "Complimenti: sei arrivato al diploma. Hai sperimentato il lavoro della RAM, l’avvio del firmware, i dati già pronti nella cache e l’archiviazione di HDD e SSD. Sai anche leggere le capacità e scegliere un intervento motivato. Il quaderno rimane tuo per ripassare: stampalo insieme al diploma o salvalo come PDF.",
   );
 }
 let printKind = "notes";

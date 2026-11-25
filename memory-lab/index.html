@@ -29,13 +29,17 @@
         <span id="student"></span
         ><button id="notebook">
           Quaderno del Tecnico <span id="noteCount">0/6</span></button
+        ><button id="byteHelp" aria-label="Leggi la spiegazione di BYTE">
+          BYTE · Aiuto</button
         ><button id="motion" aria-pressed="false">Animazioni: ON</button
         ><button id="reset" class="quiet">Ricomincia da zero</button>
       </nav>
     </header>
     <div class="global-progress"><div id="progressBar"></div></div>
-    <main id="app"></main>
-    <aside id="byte" aria-label="BYTE, assistente del laboratorio"></aside>
+    <div class="workspace">
+      <main id="app"></main>
+      <aside id="byte" aria-label="BYTE, assistente del laboratorio"></aside>
+    </div>
     <div id="announcer" class="sr-only" aria-live="polite"></div>
     <div id="toast" role="status" hidden></div>
     <dialog id="dialog">
